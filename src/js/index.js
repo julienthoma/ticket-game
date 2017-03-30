@@ -7,7 +7,14 @@ import App from './containers/App';
 
 const store = createStore(
   ExampleReducer,
-  {text: 'Hello World!!!'},
+  {
+    tickets: [
+        {
+            position: [50, 50],
+            points: 50
+        }
+    ]
+  },
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
