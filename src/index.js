@@ -7,7 +7,7 @@ import App from './containers/App';
 
 const store = createStore(
   ExampleReducer,
-  {text: 'Hello World!'},
+  {text: 'Hello World!!!'},
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
