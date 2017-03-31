@@ -14,7 +14,8 @@ const Ticket = ({rawTicket}) => {
         height: TICKET_HEIGHT
       }}
     >
-      {points}
+      <img className="ticket__image" src="src/img/ticket.jpeg" />
+      <div className="ticket__points">{points} €</div>
     </div>
   );
 }

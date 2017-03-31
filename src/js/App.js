@@ -7,8 +7,9 @@ import * as consts from './constants';
 
 class App extends React.Component {
   componentDidMount() {
-    this.ticketSpawnInterval = setInterval(this.spawnTicket, 2000);
+    this.ticketSpawnInterval = setInterval(this.spawnTicket, 1000);
     this.tickInterval = setInterval(this.tick, 16);
+    this.durationTimeout = setTimeout(this.endGame, 1000 * 20);
     document.onkeydown = this.handleKeyPress;
   }
 
@@ -28,6 +29,12 @@ class App extends React.Component {
     }
   }
 
+  endGame = () => {
+    this.props.dispatch({
+      type: consts.END
+    })
+  }
+
   tick = () => {
     this.props.dispatch({
       type: consts.TICK
@@ -39,13 +46,17 @@ class App extends React.Component {
       type: consts.SPAWN_TICKET,
       payload: {
         x: Math.ceil((window.innerWidth - consts.TICKET_WIDTH) * Math.random()),
-        points: Math.ceil(Math.random() * 50) + 50
+        points: Math.ceil(Math.random() * 100) + Math.ceil(Math.random() * 100)
       }
     })
   }
 
   render() {
-    const { tickets, cart, score } = this.props;
+    const { tickets, cart, score, isFinished } = this.props;
+
+    if (isFinished) {
+      return (<h1>WEEEE you have finished with {score} points</h1>)
+    }
 
     return (
       <div className="container">
@@ -70,7 +81,8 @@ class App extends React.Component {
 const mapStateToProps = state => ({
   tickets: state.tickets,
   cart: state.cart,
-  score: state.score
+  score: state.score,
+  isFinished: state.isFinished
 });
 
 const _App = connect(mapStateToProps)(App);

@@ -1,5 +1,6 @@
 import * as consts from './constants';
-const coinSound = new Audio("http://www.freesound.org/data/previews/350/350876_5450487-lq.mp3");
+const coinSound = new Audio('src/audio/coin.mp3');
+const errorSound = new Audio('src/audio/error.mp3');
 
 export default (state, { type, payload }) => {
   switch(type) {
@@ -19,6 +20,7 @@ export default (state, { type, payload }) => {
 
     case consts.TICK:
       let newPoints = 0;
+      let missedTickets = 0;
       const newTickets = state.tickets.slice(0);
 
       newTickets.forEach(ticket => {
@@ -32,24 +34,28 @@ export default (state, { type, payload }) => {
           newPoints += ticket.points;
           ticket.gathered = true;
           coinSound.play();
+        } else if (ticket.y > window.innerHeight) {
+          missedTickets++;
         }
       });
+      const newScore = state.score += (newPoints - missedTickets * 200);
 
-      const newScore = state.score += newPoints;
+      if (missedTickets > 0) {
+        errorSound.play();
+      }
 
       return {
         ...state,
         tickets: newTickets.filter(ticket => ticket.y <= window.innerHeight && !ticket.gathered),
-        score: newScore,
-        isFinished: newScore >= 5000
+        score: newScore
       }
 
-    case consts.MOVE_LEFT:s
+    case consts.MOVE_LEFT:
       return {
         ...state,
         cart: {
           ...state.cart,
-          x: Math.max(0, state.cart.x - 50)
+          x: Math.max(0, state.cart.x - 150)
         }
       }
 
@@ -58,8 +64,14 @@ export default (state, { type, payload }) => {
         ...state,
         cart: {
           ...state.cart,
-          x: Math.min(window.innerWidth - consts.CART_WIDTH, state.cart.x + 50)
+          x: Math.min(window.innerWidth - consts.CART_WIDTH, state.cart.x + 150)
         }
+      }
+
+    case consts.END:
+      return {
+        ...state,
+        isFinished: true
       }
 
     default:

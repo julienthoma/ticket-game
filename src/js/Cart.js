@@ -14,6 +14,7 @@ const Cart = ({ rawCart }) => {
         height: CART_HEIGHT
       }}
     >
+      <img src="src/img/cart.png" />
     </div>
   );
 }
